@@ -1,0 +1,23 @@
+# docker-compose.yml
+# Levanta la base de datos PostgreSQL del proyecto de forma aislada y reproducible.
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: pedbox-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pedbox_user
+      POSTGRES_PASSWORD: Pedbox1708
+      POSTGRES_DB: pedbox_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pedbox_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pedbox_user -d pedbox_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pedbox_pg_data:
