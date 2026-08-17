@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn, BeforeInsert } from 'typeorm';
 import { Character } from '../../characters/entities/character.entity';
+import { randomUUID } from 'crypto';
 
 /**
  * Entidad que representa a un episodio de Rick and Morty (API: /episode).
@@ -11,7 +12,7 @@ export class Episode {
     id!: number;
 
     // Identificador único universal (UUID) del episodio.
-    @Column({ type: 'uuid' })
+    @Column({ type: 'uuid', unique: true })
     uuid!: string;
 
     // Nombre del episodio.
@@ -36,4 +37,15 @@ export class Episode {
      */
     @OneToMany(() => Character, (character: Character) => character.episodes)
     characters!: Character[];
+
+    /**
+     * Antes de insertar un nuevo episodio, genera un UUID si no se ha proporcionado uno.
+     * Esto asegura que cada episodio tenga un identificador único universal.
+     */
+    @BeforeInsert()
+    generateUUID() {
+        if (!this.uuid) {
+            this.uuid = randomUUID();
+        }
+    }
 }

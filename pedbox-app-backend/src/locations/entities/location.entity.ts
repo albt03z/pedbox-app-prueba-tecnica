@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn, BeforeInsert } from 'typeorm';
 import { Character } from '../../characters/entities/character.entity';
+import { randomUUID } from 'crypto';
 
 /**
  * Entidad que representa a un planeta de origen o de residencia 
@@ -12,7 +13,7 @@ export class Location {
     id!: number;
 
     // Identificador único universal (UUID) del planeta o dimensión.
-    @Column({ type: 'uuid' })
+    @Column({ type: 'uuid', unique: true })
     uuid!: string;
 
     // Nombre del planeta o dimensión.
@@ -40,4 +41,15 @@ export class Location {
      */
     @OneToMany(() => Character, (character: Character) => character.location)
     charactersLocation!: Character[];
+
+    /**
+     * Antes de insertar un nuevo personaje, genera un UUID si no se ha proporcionado uno.
+     * Esto asegura que cada personaje tenga un identificador único universal.
+     */
+    @BeforeInsert()
+    generateUUID() {
+        if (!this.uuid) {
+            this.uuid = randomUUID();
+        }
+    }
 }

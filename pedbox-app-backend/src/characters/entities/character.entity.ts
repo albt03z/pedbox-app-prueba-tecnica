@@ -1,4 +1,5 @@
 import {
+    BeforeInsert,
     Column,
     Entity,
     JoinColumn,
@@ -7,6 +8,7 @@ import {
     ManyToOne,
     PrimaryColumn,
 } from 'typeorm';
+import { randomUUID } from 'crypto';
 import { Location } from '../../locations/entities/location.entity';
 import { Episode } from '../../episodes/entities/episode.entity';
 
@@ -20,7 +22,7 @@ export class Character {
     id!: number;
 
     // Identificador único universal (UUID) del personaje.
-    @Column({ type: 'uuid' })
+    @Column({ type: 'uuid', unique: true })
     uuid!: string;
 
     // Nombre del personaje.
@@ -71,4 +73,15 @@ export class Character {
         inverseJoinColumn: { name: 'episode_id', referencedColumnName: 'id' },
     })
     episodes!: Episode[];
+
+    /**
+     * Antes de insertar un nuevo personaje, genera un UUID si no se ha proporcionado uno.
+     * Esto asegura que cada personaje tenga un identificador único universal.
+     */
+    @BeforeInsert()
+    generateUUID() {
+        if (!this.uuid) {
+            this.uuid = randomUUID();
+        }
+    }
 }
