@@ -3,6 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { LocationsModule } from './locations/locations.module';
+import { EpisodesModule } from './episodes/episodes.module';
+import { CharactersModule } from './characters/characters.module';
 
 @Module({
   imports: [
@@ -32,6 +35,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         synchronize: configService.get<string>('NODE_ENV') !== 'production',
       }),
     }),
+    LocationsModule,
+    EpisodesModule,
+    CharactersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
