@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Character } from './entities/character.entity';
+import { CharactersService } from './characters.service';
+import { CharactersController } from './characters.controller';
 
-/** Expone el repositorio de Character al resto de la app (seeder, controllers). */
 @Module({
   imports: [TypeOrmModule.forFeature([Character])],
+  controllers: [CharactersController],
+  providers: [CharactersService],
   exports: [TypeOrmModule],
 })
 export class CharactersModule {}
