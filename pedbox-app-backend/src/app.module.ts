@@ -7,6 +7,8 @@ import { LocationsModule } from './locations/locations.module';
 import { EpisodesModule } from './episodes/episodes.module';
 import { CharactersModule } from './characters/characters.module';
 import { RickAndMortyModule } from './rick-and-morty/rick-and-morty.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { RickAndMortyModule } from './rick-and-morty/rick-and-morty.module';
     EpisodesModule,
     CharactersModule,
     RickAndMortyModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
