@@ -179,7 +179,6 @@ El backend usa [Pino](https://getpino.io/) (vía `nestjs-pino`) en vez del logge
 | Documentación con Swagger/OpenAPI      | Implementado (`/api/docs`) |
 | Docker Compose completo (back+front+db) | Implementado (`docker compose up -d --build`) |
 | Logging estructurado                    | Implementado (Pino) |
-| Despliegue en vivo                      | Pendiente    |
 
 ## Tests
 

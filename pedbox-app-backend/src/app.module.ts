@@ -84,6 +84,14 @@ import { AuthModule } from './auth/auth.module';
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
         synchronize: configService.get<string>('NODE_ENV') !== 'production',
+        // Proveedores de Postgres en la nube (Neon, Supabase, etc.) exigen
+        // SSL; el Postgres local de docker-compose no lo necesita ni lo
+        // soporta configurado así — por eso es un toggle explícito por
+        // env var y no algo inferido de NODE_ENV.
+        ssl:
+          configService.get<string>('DB_SSL') === 'true'
+            ? { rejectUnauthorized: false }
+            : false,
       }),
     }),
     LocationsModule,
