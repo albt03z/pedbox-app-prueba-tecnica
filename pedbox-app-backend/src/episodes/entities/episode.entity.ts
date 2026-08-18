@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryColumn, BeforeInsert } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryColumn, BeforeInsert } from 'typeorm';
 import { Character } from '../../characters/entities/character.entity';
 import { randomUUID } from 'crypto';
 
@@ -35,7 +35,7 @@ export class Episode {
      * Relación uno a muchos con la entidad Character.
      * Representa los personajes que aparecen en este episodio.
      */
-    @OneToMany(() => Character, (character: Character) => character.episodes)
+    @ManyToMany(() => Character, (character: Character) => character.episodes)
     characters!: Character[];
 
     /**

@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { LocationsModule } from './locations/locations.module';
 import { EpisodesModule } from './episodes/episodes.module';
 import { CharactersModule } from './characters/characters.module';
+import { RickAndMortyModule } from './rick-and-morty/rick-and-morty.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { CharactersModule } from './characters/characters.module';
     LocationsModule,
     EpisodesModule,
     CharactersModule,
+    RickAndMortyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
