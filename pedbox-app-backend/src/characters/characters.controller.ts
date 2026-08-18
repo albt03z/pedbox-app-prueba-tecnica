@@ -1,4 +1,5 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CharactersService } from './characters.service';
 import { FindCharactersQueryDto } from './dto/find-characters-query.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -8,6 +9,8 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
  * usuarios autenticados (con un JWT válido de /auth/login) pueden listar
  * o ver detalle de personajes.
  */
+@ApiTags('characters')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('characters')
 export class CharactersController {

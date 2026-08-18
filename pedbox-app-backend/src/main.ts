@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -23,6 +24,23 @@ async function bootstrap() {
 
   // El frontend (Vite/React) corre en otro origen (puerto distinto) en desarrollo.
   app.enableCors();
+
+  /**
+   * Documentación OpenAPI/Swagger, generada a partir de los DTOs y
+   * decoradores @Api* de los controllers. addBearerAuth() agrega el
+   * botón "Authorize" en la UI para probar los endpoints protegidos
+   * pegando el JWT obtenido en /auth/login.
+   */
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('PedBox — Rick and Morty API')
+    .setDescription(
+      'API REST que normaliza y expone datos de la Rick and Morty API, con autenticación JWT.',
+    )
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('api/docs', app, swaggerDocument);
 
   await app.listen(process.env.PORT ?? 3000);
 }

@@ -66,7 +66,7 @@ cd pedbox-app-prueba-tecnica
 docker compose up -d
 ```
 
-Esto crea un contenedor `pedbox-postgres` en el puerto **5433** del host (no 5432, para no chocar con una instalación nativa de Postgres si ya tienes una).
+Esto crea un contenedor `pedbox-postgres` en el puerto **5433** del host.
 
 ### 3. Backend
 
@@ -152,6 +152,10 @@ Todos los endpoints de recursos (excepto `/auth/*`) requieren header `Authorizat
 
 Ejemplo de filtro combinado: `GET /characters?status=Alive&species=Human&sortBy=name&order=ASC&page=1&limit=12`.
 
+### Documentación interactiva (Swagger)
+
+Con el backend corriendo, la documentación OpenAPI está en `http://localhost:3000/api/docs`. Para probar endpoints protegidos: hacé login/register ahí mismo, copiá el `accessToken`, y pegalo en el botón **Authorize** (arriba a la derecha) como `Bearer <token>`.
+
 ## Estado de los bonus (opcionales)
 
 | Bonus                                | Estado         |
@@ -159,7 +163,7 @@ Ejemplo de filtro combinado: `GET /characters?status=Alive&species=Human&sortBy=
 | Filtros y búsqueda en el listado       | ✅ Implementado |
 | Ordenamiento de resultados             | ✅ Implementado |
 | Pruebas unitarias (Jest / RTL)         | ⏳ Pendiente    |
-| Documentación con Swagger/OpenAPI      | ⏳ Pendiente    |
+| Documentación con Swagger/OpenAPI      | ✅ Implementado (`/api/docs`) |
 | Docker Compose completo (back+front+db) | ⏳ Pendiente (hoy solo la BD está en Docker) |
 | Cacheo de resultados                    | ⏳ Pendiente    |
 | Logging estructurado                    | ⏳ Pendiente    |
