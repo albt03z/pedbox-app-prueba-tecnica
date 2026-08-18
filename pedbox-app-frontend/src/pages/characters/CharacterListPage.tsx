@@ -5,10 +5,18 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { Spinner } from '@/components/ui/Spinner';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { Pagination } from '@/components/ui/Pagination';
+import { Dropdown, type DropdownOption } from '@/components/ui/Dropdown';
 import type { Character } from '@/types/rick-and-morty.types';
 import type { PaginatedResult } from '@/types/pagination.types';
 
 const PAGE_SIZE = 12;
+
+const STATUS_OPTIONS: DropdownOption[] = [
+  { value: '', label: 'Todos los estados' },
+  { value: 'Alive', label: 'Vivo' },
+  { value: 'Dead', label: 'Muerto' },
+  { value: 'unknown', label: 'Desconocido' },
+];
 
 export function CharacterListPage() {
   const [page, setPage] = useState(1);
@@ -65,16 +73,7 @@ export function CharacterListPage() {
           onChange={(e) => setName(e.target.value)}
           className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-base focus:border-purple-500 focus:outline-none"
         />
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="rounded-md border border-slate-300 px-3 py-2 text-base focus:border-purple-500 focus:outline-none"
-        >
-          <option value="">Todos los estados</option>
-          <option value="Alive">Vivo</option>
-          <option value="Dead">Muerto</option>
-          <option value="unknown">Desconocido</option>
-        </select>
+        <Dropdown options={STATUS_OPTIONS} value={status} onChange={setStatus} />
       </div>
 
       {isLoading && <Spinner />}
