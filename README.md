@@ -19,8 +19,8 @@ Monorepo con dos proyectos independientes:
 
 ```
 pedbox-app-prueba-tecnica/
-├── docker-compose.yml        # PostgreSQL para desarrollo local
-├── pedbox-app-backend/       # API REST (NestJS + TypeORM)
+├── docker-compose.yml        # Levanta los 3 servicios (db + backend + frontend) con un comando
+├── pedbox-app-backend/       # API REST (NestJS + TypeORM) — tiene su propio Dockerfile
 │   └── src/
 │       ├── auth/             # Registro, login, JWT strategy/guard
 │       ├── users/             # Entidad User (autenticación)
@@ -29,7 +29,7 @@ pedbox-app-prueba-tecnica/
 │       ├── characters/        # Entidad Character + endpoints (recurso principal)
 │       ├── rick-and-morty/    # Cliente HTTP + seed de la API externa
 │       └── database/          # Script de seed (npm run seed)
-└── pedbox-app-frontend/      # SPA (React + Vite + Tailwind)
+└── pedbox-app-frontend/      # SPA (React + Vite + Tailwind) — tiene su propio Dockerfile (nginx)
     └── src/
         ├── context/           # AuthContext (sesión, token, expiración)
         ├── services/          # Cliente HTTP + servicios por recurso
@@ -53,22 +53,41 @@ Cada entidad expone un `id` interno (igual al id de la API externa, usado para u
 
 ## Instalación y puesta en marcha
 
-### 1. Clonar el repositorio
+### Opción A — Con Docker (un solo comando)
+
+Levanta PostgreSQL, el backend y el frontend juntos:
 
 ```bash
 git clone <url-del-repositorio>
 cd pedbox-app-prueba-tecnica
+docker compose up -d --build
 ```
 
-### 2. Levantar PostgreSQL con Docker
+- Backend: `http://localhost:3000` (Swagger en `/api/docs`)
+- Frontend: `http://localhost:5174`
+- PostgreSQL: `localhost:5433` (por si quieres conectarte con DBeaver/psql)
+
+La primera vez, la base de datos queda vacía — hay que sembrarla una vez ejecutando el seed **dentro** del contenedor del backend:
 
 ```bash
-docker compose up -d
+docker compose exec backend npm run seed:prod
 ```
 
-Esto crea un contenedor `pedbox-postgres` en el puerto **5433** del host.
+(Tarda 1-2 minutos: ~126 locations, ~50+ episodes, ~800+ characters). Las corridas posteriores de `docker compose up -d` reutilizan el mismo volumen de Postgres, así que no hace falta repetir el seed.
 
-### 3. Backend
+> Las credenciales de la BD y el `JWT_SECRET` para este modo ya están definidos directamente en `docker-compose.yml` (son solo para levantar el entorno local/demo, no secretos reales).
+
+### Opción B — Desarrollo local (sin Docker para back/front)
+
+Para iterar más rápido en el código, usa solo Docker para la base de datos y corre backend/frontend nativos con hot-reload.
+
+**1. Base de datos:**
+
+```bash
+docker compose up -d postgres
+```
+
+**2. Backend:**
 
 ```bash
 cd pedbox-app-backend
@@ -85,32 +104,19 @@ Edita `.env` y reemplaza `JWT_SECRET` por un valor aleatorio propio (puedes gene
 
 Los demás valores de `.env.example` ya coinciden con `docker-compose.yml` y funcionan tal cual en local.
 
-Puebla la base de datos consumiendo la Rick and Morty API (tarda 1-2 minutos, ~126 locations, ~50+ episodes, ~800+ characters):
-
 ```bash
-npm run seed
+npm run seed        # puebla la BD (1-2 minutos)
+npm run start:dev   # http://localhost:3000
 ```
 
-Levanta el servidor en modo desarrollo:
-
-```bash
-npm run start:dev
-```
-
-La API queda disponible en `http://localhost:3000`.
-
-### 4. Frontend
-
-En otra terminal:
+**3. Frontend** (en otra terminal):
 
 ```bash
 cd pedbox-app-frontend
 npm install
 cp .env.example .env   # en Windows: Copy-Item .env.example .env
-npm run dev
+npm run dev             # http://localhost:5173
 ```
-
-La app queda disponible en `http://localhost:5173`.
 
 ## Variables de entorno
 
@@ -156,6 +162,13 @@ Ejemplo de filtro combinado: `GET /characters?status=Alive&species=Human&sortBy=
 
 Con el backend corriendo, la documentación OpenAPI está en `http://localhost:3000/api/docs`. Para probar endpoints protegidos: hacé login/register ahí mismo, copiá el `accessToken`, y pegalo en el botón **Authorize** (arriba a la derecha) como `Bearer <token>`.
 
+### Logging estructurado
+
+El backend usa [Pino](https://getpino.io/) (vía `nestjs-pino`) en vez del logger por defecto de Nest. Cada request HTTP se loguea automáticamente con método, ruta, status y tiempo de respuesta, y los datos sensibles nunca quedan expuestos: el header `Authorization` y el campo `password` del body se reemplazan por `**REDACTED**`.
+
+- En una terminal interactiva (desarrollo local con `npm run start:dev`): salida legible y con color.
+- En Docker/producción (sin TTY real): JSON plano por stdout, listo para enviar a un agregador de logs (Datadog, CloudWatch, Loki, etc.).
+
 ## Estado de los bonus (opcionales)
 
 | Bonus                                | Estado         |
@@ -164,9 +177,8 @@ Con el backend corriendo, la documentación OpenAPI está en `http://localhost:3
 | Ordenamiento de resultados             | Implementado |
 | Pruebas unitarias (Jest / RTL)         | Implementado |
 | Documentación con Swagger/OpenAPI      | Implementado (`/api/docs`) |
-| Docker Compose completo (back+front+db) | Pendiente (hoy solo la BD está en Docker) |
-| Cacheo de resultados                    | Pendiente    |
-| Logging estructurado                    | Pendiente    |
+| Docker Compose completo (back+front+db) | Implementado (`docker compose up -d --build`) |
+| Logging estructurado                    | Implementado (Pino) |
 | Despliegue en vivo                      | Pendiente    |
 
 ## Tests

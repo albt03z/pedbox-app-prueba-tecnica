@@ -1,10 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // bufferLogs: true retiene los logs de arranque hasta que el logger
+  // de Pino (registrado más abajo) esté listo, para no perder nada.
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  // Reemplaza el logger interno de Nest por Pino: cualquier
+  // `new Logger(...)` de @nestjs/common usado en el resto del código
+  // (ej. SeedService, RickAndMortyApiService) queda automáticamente
+  // enrutado a través de Pino sin tener que tocar esos archivos.
+  app.useLogger(app.get(Logger));
 
   /**
    * Valida y transforma automáticamente los DTOs de entrada en todos
