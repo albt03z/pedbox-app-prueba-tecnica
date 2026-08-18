@@ -50,6 +50,7 @@ Cada entidad expone un `id` interno (igual al id de la API externa, usado para u
 
 - [Node.js](https://nodejs.org/) 20 LTS o superior (probado con Node 24)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (con WSL2 en Windows) — para levantar PostgreSQL
+  - En Windows, WSL2 no viene activado por defecto: si Docker Desktop no arranca o pide WSL2, instálalo antes con `wsl --install` (PowerShell como administrador) y reinicia.
 
 ## Instalación y puesta en marcha
 
