@@ -162,7 +162,7 @@ Con el backend corriendo, la documentación OpenAPI está en `http://localhost:3
 | -------------------------------------- | -------------- |
 | Filtros y búsqueda en el listado       | ✅ Implementado |
 | Ordenamiento de resultados             | ✅ Implementado |
-| Pruebas unitarias (Jest / RTL)         | ⏳ Pendiente    |
+| Pruebas unitarias (Jest / RTL)         | ✅ Implementado |
 | Documentación con Swagger/OpenAPI      | ✅ Implementado (`/api/docs`) |
 | Docker Compose completo (back+front+db) | ⏳ Pendiente (hoy solo la BD está en Docker) |
 | Cacheo de resultados                    | ⏳ Pendiente    |
@@ -171,7 +171,23 @@ Con el backend corriendo, la documentación OpenAPI está en `http://localhost:3
 
 ## Tests
 
-Aún no se agregaron pruebas automatizadas (bonus pendiente). `npm run test` en el backend corre la suite base generada por Nest CLI.
+**Backend** (Jest, mockeando repositorios de TypeORM — no requieren la BD levantada):
+
+```bash
+cd pedbox-app-backend
+npm run test
+```
+
+Cubre `AuthService` (registro, login, hash de contraseña, credenciales inválidas) y `CharactersService` (paginación, filtros, 404 en detalle inexistente).
+
+**Frontend** (Vitest + React Testing Library — API compatible con Jest, integración nativa con Vite):
+
+```bash
+cd pedbox-app-frontend
+npm run test
+```
+
+Cubre el componente `Pagination` (estados de los botones, callback de cambio de página) y `LoginPage` (renderizado del formulario, mensaje de error ante credenciales inválidas).
 
 ## Despliegue
 
