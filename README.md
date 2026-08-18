@@ -197,13 +197,3 @@ Cubre `AuthService` (registro, login, hash de contraseña, credenciales inválid
 cd pedbox-app-frontend
 npm run test
 ```
-
-Cubre el componente `Pagination` (estados de los botones, callback de cambio de página) y `LoginPage` (renderizado del formulario, mensaje de error ante credenciales inválidas).
-
-## Despliegue
-
-Sin desplegar todavía (bonus pendiente).
-
-## Autor
-
-Prueba técnica desarrollada para el proceso de selección de PedBox S.A.S.
