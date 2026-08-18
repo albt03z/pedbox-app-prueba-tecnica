@@ -1,5 +1,5 @@
 # docker-compose.yml
-# Levanta la base de datos PostgreSQL del proyecto de forma aislada y reproducible.
+# Levanta los 3 componentes del proyecto con un solo comando: `docker compose up -d`.
 services:
   postgres:
     image: postgres:17-alpine
@@ -10,14 +10,48 @@ services:
       POSTGRES_PASSWORD: Pedbox1708
       POSTGRES_DB: pedbox_db
     ports:
-      - "5433:5432"
+      - '5433:5432'
     volumes:
       - pedbox_pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U pedbox_user -d pedbox_db"]
+      test: ['CMD-SHELL', 'pg_isready -U pedbox_user -d pedbox_db']
       interval: 5s
       timeout: 5s
       retries: 5
+
+  backend:
+    build:
+      context: ./pedbox-app-backend
+    container_name: pedbox-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      NODE_ENV: development
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: pedbox_user
+      DB_PASSWORD: Pedbox1708
+      DB_NAME: pedbox_db
+      JWT_SECRET: docker-compose-demo-secret-cambiar-en-un-entorno-real
+      JWT_EXPIRES_IN: 1d
+      RICK_AND_MORTY_API_URL: https://rickandmortyapi.com/api
+    ports:
+      - '3000:3000'
+
+  frontend:
+    build:
+      context: ./pedbox-app-frontend
+      args:
+        VITE_API_URL: http://localhost:3000
+    container_name: pedbox-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - '5174:80'
 
 volumes:
   pedbox_pg_data:

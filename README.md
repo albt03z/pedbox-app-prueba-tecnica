@@ -160,14 +160,14 @@ Con el backend corriendo, la documentación OpenAPI está en `http://localhost:3
 
 | Bonus                                | Estado         |
 | -------------------------------------- | -------------- |
-| Filtros y búsqueda en el listado       | ✅ Implementado |
-| Ordenamiento de resultados             | ✅ Implementado |
-| Pruebas unitarias (Jest / RTL)         | ✅ Implementado |
-| Documentación con Swagger/OpenAPI      | ✅ Implementado (`/api/docs`) |
-| Docker Compose completo (back+front+db) | ⏳ Pendiente (hoy solo la BD está en Docker) |
-| Cacheo de resultados                    | ⏳ Pendiente    |
-| Logging estructurado                    | ⏳ Pendiente    |
-| Despliegue en vivo                      | ⏳ Pendiente    |
+| Filtros y búsqueda en el listado       | Implementado |
+| Ordenamiento de resultados             | Implementado |
+| Pruebas unitarias (Jest / RTL)         | Implementado |
+| Documentación con Swagger/OpenAPI      | Implementado (`/api/docs`) |
+| Docker Compose completo (back+front+db) | Pendiente (hoy solo la BD está en Docker) |
+| Cacheo de resultados                    | Pendiente    |
+| Logging estructurado                    | Pendiente    |
+| Despliegue en vivo                      | Pendiente    |
 
 ## Tests
 
